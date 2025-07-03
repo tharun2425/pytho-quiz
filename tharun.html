@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Test Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 28px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .content {
+            padding: 30px;
+            min-height: 500px;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .question-number {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .options {
+            margin-left: 20px;
+        }
+        
+        .option {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .results-table th, .results-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .results-table th {
+            background: #2c3e50;
+            color: white;
+        }
+        
+        .results-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .results-table tr:hover {
+            background: #e9f7fe;
+        }
+        
+        .score-cell {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .high-score {
+            color: #27ae60;
+        }
+        
+        .medium-score {
+            color: #f39c12;
+        }
+        
+        .low-score {
+            color: #e74c3c;
+        }
+        
+        .timer {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .thank-you {
+            text-align: center;
+            padding: 50px 0;
+        }
+        
+        .thank-you i {
+            font-size: 60px;
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+        
+        .thank-you h2 {
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .thank-you p {
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+        }
+        
+        .instructions {
+            background: #e9f7fe;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .instructions ul {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .admin-note {
+            background: #fff8e1;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 4px solid #f39c12;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-laptop-code"></i>
+            </div>
+            <h1>Python Skills Assessment</h1>
+            <div class="subtitle">Test your Python knowledge</div>
+            <div class="timer" id="timer">20:00</div>
+        </header>
+        
+        <div class="content">
+            <!-- Login Page -->
+            <div class="page active" id="login-page">
+                <h2><i class="fas fa-sign-in-alt"></i> Candidate Login</h2>
+                <div class="instructions">
+                    <p><strong>Instructions:</strong></p>
+                    <ul>
+                        <li>Provide your full name and phone number</li>
+                        <li>You will have 20 minutes to complete the test</li>
+                        <li>The test contains 15 multiple-choice questions</li>
+                        <li>Do not refresh the page during the test</li>
+                    </ul>
+                </div>
+                
+                <div class="form-group">
+                    <label for="name">Full Name:</label>
+                    <input type="text" id="name" placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" placeholder="Enter your phone number">
+                </div>
+                
+                <button onclick="startTest()">
+                    <i class="fas fa-play-circle"></i> Start Test
+                </button>
+                
+                <div class="admin-note">
+                    <strong>Note for Admin:</strong> After candidates complete the test, 
+                    you can view all results on the results page.
+                </div>
+            </div>
+            
+            <!-- Test Page -->
+            <div class="page" id="test-page">
+                <h2><i class="fas fa-question-circle"></i> Python Knowledge Test</h2>
+                <div id="questions-container"></div>
+                <button onclick="submitTest()">
+                    <i class="fas fa-paper-plane"></i> Submit Answers
+                </button>
+            </div>
+            
+            <!-- Thank You Page -->
+            <div class="page" id="thank-you-page">
+                <div class="thank-you">
+                    <i class="fas fa-check-circle"></i>
+                    <h2>Test Submitted Successfully!</h2>
+                    <p>Thank you for completing the Python assessment.</p>
+                    <p>Your results will be available to the test administrator.</p>
+                </div>
+            </div>
+            
+            <!-- Results Page -->
+            <div class="page" id="results-page">
+                <h2><i class="fas fa-chart-bar"></i> Test Results</h2>
+                <p>Administrator view - All candidate results</p>
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone Number</th>
+                            <th>Score</th>
+                            <th>Conducted By</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-body">
+                        <!-- Results will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test questions data
+        const questions = [
+            {
+                question: "Which of the following is the correct way to create a function in Python?",
+                options: [
+                    "function myFunction():",
+                    "def myFunction():",
+                    "create myFunction():",
+                    "func myFunction():"
+                ],
+                answer: 1
+            },
+            {
+                question: "What does the 'len()' function do in Python?",
+                options: [
+                    "Converts a string to lowercase",
+                    "Returns the length of an object",
+                    "Creates a new list",
+                    "Imports a module"
+                ],
+                answer: 1
+            },
+            {
+                question: "Which operator is used for exponentiation in Python?",
+                options: [
+                    "*",
+                    "**",
+                    "^",
+                    "//"
+                ],
+                answer: 1
+            },
+            {
+                question: "How do you start a comment in Python?",
+                options: [
+                    "//",
+                    "/*",
+                    "#",
+                    "--"
+                ],
+                answer: 2
+            },
+            {
+                question: "What is the output of: print(type([]))",
+                options: [
+                    "<class 'array'>",
+                    "<class 'list'>",
+                    "<class 'tuple'>",
+                    "<class 'dict'>"
+                ],
+                answer: 1
+            },
+            {
+                question: "Which method is used to remove an item from a list?",
+                options: [
+                    ".delete()",
+                    ".pop()",
+                    ".remove()",
+                    ".discard()"
+                ],
+                answer: 2
+            },
+            {
+                question: "What is the correct way to open a file for reading?",
+                options: [
+                    "file.open('example.txt', 'r')",
+                    "open('example.txt', 'read')",
+                    "open('example.txt', 'r')",
+                    "file('example.txt').read()"
+                ],
+                answer: 2
+            },
+            {
+                question: "Which of these is NOT a valid variable name?",
+                options: [
+                    "_my_var",
+                    "myVar",
+                    "2nd_var",
+                    "my_var_2"
+                ],
+                answer: 2
+            },
+            {
+                question: "What is the result of: 5 // 2",
+                options: [
+                    "2.5",
+                    "2",
+                    "3",
+                    "2.0"
+                ],
+                answer: 1
+            },
+            {
+                question: "Which collection is ordered and changeable?",
+                options: [
+                    "Set",
+                    "Dictionary",
+                    "Tuple",
+                    "List"
+                ],
+                answer: 3
+            },
+            {
+                question: "What does the 'self' parameter represent in a class method?",
+                options: [
+                    "The class itself",
+                    "The method itself",
+                    "The instance of the class",
+                    "A reference to the parent class"
+                ],
+                answer: 2
+            },
+            {
+                question: "How do you create a tuple with a single item?",
+                options: [
+                    "(item)",
+                    "[item]",
+                    "{item}",
+                    "(item,)"
+                ],
+                answer: 3
+            },
+            {
+                question: "Which of these is used for conditional execution?",
+                options: [
+                    "for",
+                    "while",
+                    "if",
+                    "def"
+                ],
+                answer: 2
+            },
+            {
+                question: "What is the output of: print('Hello' * 3)",
+                options: [
+                    "HelloHelloHello",
+                    "Hello*3",
+                    "TypeError",
+                    "Hello Hello Hello"
+                ],
+                answer: 0
+            },
+            {
+                question: "Which module is used for working with dates?",
+                options: [
+                    "time",
+                    "calendar",
+                    "datetime",
+                    "date"
+                ],
+                answer: 2
+            }
+        ];
+
+        // Global variables
+        let candidateName = "";
+        let candidatePhone = "";
+        let userAnswers = new Array(questions.length).fill(-1);
+        let timeLeft = 20 * 60; // 20 minutes in seconds
+        let timerInterval;
+        
+        // Start the test
+        function startTest() {
+            candidateName = document.getElementById('name').value.trim();
+            candidatePhone = document.getElementById('phone').value.trim();
+            
+            if (!candidateName || !candidatePhone) {
+                alert("Please enter both your name and phone number");
+                return;
+            }
+            
+            // Switch to test page
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('test-page').classList.add('active');
+            
+            // Render questions
+            renderQuestions();
+            
+            // Start timer
+            startTimer();
+        }
+        
+        // Render questions on test page
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = "";
+            
+            questions.forEach((q, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+                
+                let optionsHtml = "";
+                q.options.forEach((option, optIndex) => {
+                    optionsHtml += `
+                        <div class="option">
+                            <input type="radio" name="q${index}" id="q${index}o${optIndex}" value="${optIndex}" 
+                                ${userAnswers[index] === optIndex ? 'checked' : ''}>
+                            <label for="q${index}o${optIndex}">${option}</label>
+                        </div>
+                    `;
+                });
+                
+                questionElement.innerHTML = `
+                    <div class="question-number">Question ${index + 1}:</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">${optionsHtml}</div>
+                `;
+                
+                // Add event listeners to radio buttons
+                const radios = questionElement.querySelectorAll('input[type="radio"]');
+                radios.forEach(radio => {
+                    radio.addEventListener('change', () => {
+                        userAnswers[index] = parseInt(radio.value);
+                    });
+                });
+                
+                container.appendChild(questionElement);
+            });
+        }
+        
+        // Start the countdown timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+            
+            updateTimerDisplay();
+        }
+        
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Submit test and calculate results
+        function submitTest() {
+            clearInterval(timerInterval);
+            
+            // Calculate score
+            let score = 0;
+            questions.forEach((q, index) => {
+                if (userAnswers[index] === q.answer) {
+                    score++;
+                }
+            });
+            
+            // Save results to localStorage
+            const testResult = {
+                name: candidateName,
+                phone: candidatePhone,
+                score: score,
+                total: questions.length,
+                timestamp: new Date().toLocaleString(),
+                conductedBy: "Admin" // This would come from logged in admin in real system
+            };
+            
+            let results = JSON.parse(localStorage.getItem('pythonTestResults') || [];
+            results.push(testResult);
+            localStorage.setItem('pythonTestResults', JSON.stringify(results));
+            
+            // Show thank you page
+            document.getElementById('test-page').classList.remove('active');
+            document.getElementById('thank-you-page').classList.add('active');
+            
+            // Hide timer
+            document.getElementById('timer').style.display = 'none';
+        }
+        
+        // For admin: show results page
+        function showResultsPage() {
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('results-page').classList.add('active');
+            
+            const resultsBody = document.getElementById('results-body');
+            resultsBody.innerHTML = "";
+            
+            const results = JSON.parse(localStorage.getItem('pythonTestResults')) || [];
+            
+            if (results.length === 0) {
+                resultsBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No results found</td></tr>`;
+                return;
+            }
+            
+            results.forEach(result => {
+                const row = document.createElement('tr');
+                
+                // Determine score class for color coding
+                const percentage = (result.score / result.total) * 100;
+                let scoreClass = "low
