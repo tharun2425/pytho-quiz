@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Python Basic Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto;}
+    .hidden { display: none; }
+    label { display: block; margin-top: 10px; }
+    button { margin-top: 15px; padding: 8px 12px; }
+    .question { margin-top: 15px; }
+  </style>
+</head>
+<body>
+
+  <!-- Login Page -->
+  <div id="loginPage">
+    <h2>Login</h2>
+    <label>Name: <input type="text" id="name" required></label>
+    <label>Number: <input type="text" id="number" required></label>
+    <button onclick="login()">Start Test</button>
+  </div>
+
+  <!-- Test Page -->
+  <div id="testPage" class="hidden">
+    <h2>Python Basic Objective Test</h2>
+    <form id="testForm">
+      <!-- Questions will be inserted here by JS -->
+    </form>
+    <button onclick="submitTest()">Submit</button>
+  </div>
+
+  <!-- Result Page -->
+  <div id="resultPage" class="hidden">
+    <h2>Test Result</h2>
+    <p id="resultText"></p>
+    <button onclick="location.reload()">Logout</button>
+  </div>
+
+  <!-- Admin Page -->
+  <div id="adminPage" class="hidden">
+    <h2>Admin - Test Results</h2>
+    <label>Enter Admin Password: <input type="password" id="adminPass"></label>
+    <button onclick="showResults()">Show Results</button>
+    <div id="resultsList" style="margin-top:20px;"></div>
+    <button onclick="location.reload()">Logout Admin</button>
+  </div>
+
+  <hr>
+  <button onclick="showAdminPage()">Admin Login</button>
+
+  <script>
+    const questions = [
+      {q:"What is the keyword to define a function in Python?", options:["func", "def", "function", "define"], answer:"def"},
+      {q:"Which data type is immutable?", options:["list", "dictionary", "tuple", "set"], answer:"tuple"},
+      {q:"How do you start a comment in Python?", options:["//", "#", "/*", "--"], answer:"#"},
+      {q:"Which symbol is used for floor division?", options:["/", "//", "%", "**"], answer:"//"},
+      {q:"What is the output of print(2**3)?", options:["6", "8", "9", "5"], answer:"8"},
+      {q:"Which function converts a string to an integer?", options:["int()", "str()", "float()", "bool()"], answer:"int()"},
+      {q:"What does 'len()' function do?", options:["Returns length", "Returns type", "Returns value", "Returns index"], answer:"Returns length"},
+      {q:"Which keyword is used for conditional statement?", options:["if", "for", "while", "def"], answer:"if"},
+      {q:"How to create a list in Python?", options:["[]", "{}", "()", "<>"], answer:"[]"},
+      {q:"What is the output of print('Hello'.lower())?", options:["HELLO", "hello", "Hello", "error"], answer:"hello"},
+      {q:"Which operator is used for string concatenation?", options:["+", "*", "&", "-"], answer:"+"},
+      {q:"How to insert comments in Python?", options:["// comment", "# comment", "<!-- comment -->", "/* comment */"], answer:"# comment"},
+      {q:"Which method adds an item to the end of a list?", options:["append()", "add()", "insert()", "push()"], answer:"append()"},
+      {q:"What is the output of print(10%3)?", options:["3", "1", "0", "Error"], answer:"1"},
+      {q:"How to check equality in Python?", options:["=", "==", "===", "!="], answer:"=="}
+    ];
+
+    let currentUser = null;
+
+    function login() {
+      const name = document.getElementById('name').value.trim();
+      const number = document.getElementById('number').value.trim();
+      if (!name || !number) {
+        alert('Please enter name and number.');
+        return;
+      }
+      currentUser = {name, number};
+      document.getElementById('loginPage').classList.add('hidden');
+      showTestPage();
+    }
+
+    function showTestPage() {
+      const form = document.getElementById('testForm');
+      form.innerHTML = '';
+      questions.forEach((q, i) => {
+        const div = document.createElement('div');
+        div.classList.add('question');
+        div.innerHTML = `<b>Q${i+1}: ${q.q}</b><br>`;
+        q.options.forEach(opt => {
+          const id = `q${i}_opt_${opt}`;
+          div.innerHTML += `
+            <label>
+              <input type="radio" name="q${i}" value="${opt}" required> ${opt}
+            </label><br>`;
+        });
+        form.appendChild(div);
+      });
+      document.getElementById('testPage').classList.remove('hidden');
+    }
+
+    function submitTest() {
+      const form = document.getElementById('testForm');
+      const formData = new FormData(form);
+      let score = 0;
+      for(let i=0; i<questions.length; i++) {
+        const userAns = formData.get(`q${i}`);
+        if(userAns === questions[i].answer) score++;
+      }
+      saveResult(score);
+      showResult(score);
+    }
+
+    function saveResult(score) {
+      let results = JSON.parse(localStorage.getItem('testResults') || '[]');
+      // Check if user already took test, update or add new
+      const idx = results.findIndex(r => r.name === currentUser.name && r.number === currentUser.number);
+      const record = {...currentUser, score};
+      if(idx >= 0) results[idx] = record;
+      else results.push(record);
+      localStorage.setItem('testResults', JSON.stringify(results));
+    }
+
+    function showResult(score) {
+      document.getElementById('testPage').classList.add('hidden');
+      const resText = `Hello ${currentUser.name}, you scored ${score} out of ${questions.length}.`;
+      document.getElementById('resultText').innerText = resText;
+      document.getElementById('resultPage').classList.remove('hidden');
+    }
+
+    function showAdminPage() {
+      // Hide other sections
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('testPage').classList.add('hidden');
+      document.getElementById('resultPage').classList.add('hidden');
+      document.getElementById('adminPage').classList.remove('hidden');
+      document.getElementById('resultsList').innerHTML = '';
+      document.getElementById('adminPass').value = '';
+    }
+
+    function showResults() {
+      const pass = document.getElementById('adminPass').value;
+      if(pass !== 'admin123') {
+        alert('Incorrect admin password.');
+        return;
+      }
+      const results = JSON.parse(localStorage.getItem('testResults') || '[]');
+      if(results.length === 0) {
+        document.getElementById('resultsList').innerHTML = '<p>No tests taken yet.</p>';
+        return;
+      }
+      let html = '<table border="1" cellpadding="5" cellspacing="0"><tr><th>Name</th><th>Number</th><th>Score</th></tr>';
+      results.forEach(r => {
+        html += `<tr><td>${r.name}</td><td>${r.number}</td><td>${r.score} / ${questions.length}</td></tr>`;
+      });
+      html += '</table>';
+      document.getElementById('resultsList').innerHTML = html;
+    }
+  </script>
+
+</body>
+</html>
