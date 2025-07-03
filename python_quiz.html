@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Quiz Exam</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        
+        .options {
+            margin-left: 20px;
+        }
+        
+        .option {
+            margin: 12px 0;
+        }
+        
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 30px auto;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .result {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .hidden-answers {
+            display: none;
+        }
+        
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .exam-rules {
+            background-color: #fff8e1;
+            padding: 15px;
+            border-left: 5px solid #ffc107;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Exam Page -->
+    <div class="container page active" id="examPage">
+        <h2>Python Basic Concepts Exam</h2>
+        
+        <div class="exam-rules">
+            <h3>Exam Rules:</h3>
+            <ul>
+                <li>You have <strong>10 minutes</strong> to complete the exam</li>
+                <li>Answer all 5 questions</li>
+                <li>No going back after submission</li>
+                <li>Results will be shown at the end</li>
+            </ul>
+        </div>
+        
+        <div class="timer" id="timer">10:00</div>
+        
+        <form id="quizForm">
+            <div class="question">
+                <p>1. Which of the following is used to define a block of code in Python?</p>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q1" value="a" id="q1a" required>
+                        <label for="q1a">a) Curly braces {}</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" value="b" id="q1b">
+                        <label for="q1b">b) Indentation</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" value="c" id="q1c">
+                        <label for="q1c">c) Parentheses ()</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" value="d" id="q1d">
+                        <label for="q1d">d) Square brackets []</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question">
+                <p>2. What is the output of: print(3 * 'hi')?</p>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q2" value="a" id="q2a" required>
+                        <label for="q2a">a) hihihi</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" value="b" id="q2b">
+                        <label for="q2b">b) 3hi</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" value="c" id="q2c">
+                        <label for="q2c">c) Error</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" value="d" id="q2d">
+                        <label for="q2d">d) None of the above</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question">
+                <p>3. Which function is used to get input from the user in Python?</p>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q3" value="a" id="q3a" required>
+                        <label for="q3a">a) gets()</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" value="b" id="q3b">
+                        <label for="q3b">b) input()</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" value="c" id="q3c">
+                        <label for="q3c">c) scanf()</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" value="d" id="q3d">
+                        <label for="q3d">d) read()</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question">
+                <p>4. What does the len() function do?</p>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q4" value="a" id="q4a" required>
+                        <label for="q4a">a) Converts to lowercase</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" value="b" id="q4b">
+                        <label for="q4b">b) Returns the length of an object</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" value="c" id="q4c">
+                        <label for="q4c">c) Prints to console</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" value="d" id="q4d">
+                        <label for="q4d">d) None of the above</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question">
+                <p>5. Which of these collections defines a list in Python?</p>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q5" value="a" id="q5a" required>
+                        <label for="q5a">a) {1, 2, 3}</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" value="b" id="q5b">
+                        <label for="q5b">b) [1, 2, 3]</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" value="c" id="q5c">
+                        <label for="q5c">c) (1, 2, 3)</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" value="d" id="q5d">
+                        <label for="q5d">d) {'a': 1, 'b': 2}</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="button" onclick="submitExam()">Submit Exam</button>
+        </form>
+    </div>
+    
+    <!-- Results Page -->
+    <div class="container page" id="resultsPage">
+        <h2>Exam Results</h2>
+        <div class="result">
+            Your score: <span id="score">0</span>/5
+        </div>
+        <div id="answersFeedback" class="hidden-answers"></div>
+        <button onclick="viewAnswers()" id="viewAnswersBtn">View Correct Answers</button>
+    </div>
+    
+    <script>
+        // Correct answers (hidden until exam submission)
+        const correctAnswers = {
+            q1: "b",
+            q2: "a",
+            q3: "b",
+            q4: "b",
+            q5: "b"
+        };
+        
+        // Timer variables
+        let timeLeft = 600; // 10 minutes in seconds
+        let timerInterval;
+        
+        // Start timer when page loads
+        window.onload = function() {
+            startTimer();
+        };
+        
+        function startTimer() {
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitExam();
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            
+            // Change color when time is running out
+            if (timeLeft < 60) {
+                document.getElementById('timer').style.backgroundColor = '#d32f2f';
+            }
+        }
+        
+        function submitExam() {
+            clearInterval(timerInterval);
+            
+            let score = 0;
+            let feedback = "";
+            
+            // Check each question
+            for (let i = 1; i <= 5; i++) {
+                const questionName = "q" + i;
+                const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`);
+                
+                if (selectedOption) {
+                    if (selectedOption.value === correctAnswers[questionName]) {
+                        score++;
+                    }
+                }
+            }
+            
+            // Show results
+            showPage('resultsPage');
+            document.getElementById('score').textContent = score;
+            
+            // Prepare hidden feedback (will be shown when user clicks "View Answers")
+            let feedbackHTML = "<h3>Correct Answers:</h3>";
+            for (let i = 1; i <= 5; i++) {
+                feedbackHTML += `<p><strong>Question ${i}:</strong> ${correctAnswers["q"+i].toUpperCase()}</p>`;
+            }
+            document.getElementById('answersFeedback').innerHTML = feedbackHTML;
+        }
+        
+        function viewAnswers() {
+            document.getElementById('answersFeedback').classList.remove('hidden-answers');
+            document.getElementById('viewAnswersBtn').style.display = 'none';
+        }
+        
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show the requested page
+            document.getElementById(pageId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
