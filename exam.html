@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Exam Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #3498db;
+            --secondary: #2980b9;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .header {
+            background: var(--dark);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.8;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .page {
+            display: none;
+            padding: 30px;
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: block;
+            margin: 30px auto 0;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        button:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .exam-info {
+            display: flex;
+            justify-content: space-between;
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .timer {
+            font-weight: bold;
+            color: var(--danger);
+            font-size: 1.4rem;
+            background: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .question {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .question-number {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .options {
+            margin-top: 20px;
+        }
+        
+        .option {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            border-color: var(--primary);
+            background: #f0f9ff;
+        }
+        
+        .option input {
+            width: auto;
+            margin-right: 15px;
+        }
+        
+        .results {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .score-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .score {
+            font-size: 5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .result-message {
+            font-size: 1.8rem;
+            margin: 20px 0;
+        }
+        
+        .pass {
+            color: var(--success);
+        }
+        
+        .fail {
+            color: var(--danger);
+        }
+        
+        .user-details {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: left;
+            font-size: 1.2rem;
+        }
+        
+        .user-details p {
+            margin: 10px 0;
+        }
+        
+        .admin-details {
+            background: var(--warning);
+            color: var(--dark);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 25px 0;
+            height: 15px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--success));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .exam-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .question {
+                padding: 20px;
+            }
+            
+            .score {
+                font-size: 4rem;
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">P</div>
+            <h1>Python Certification Exam</h1>
+            <p>Test your Python knowledge and earn a certification</p>
+        </div>
+        
+        <!-- Login Page -->
+        <div class="page active" id="loginPage">
+            <h2 style="text-align: center; margin: 20px 0 30px; color: var(--dark);">Enter Your Details</h2>
+            
+            <div class="form-group">
+                <label for="userName">Full Name:</label>
+                <input type="text" id="userName" placeholder="Enter your full name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="userNumber">Mobile Number:</label>
+                <input type="tel" id="userNumber" placeholder="Enter your 10-digit mobile number" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="examCode">Exam Code (if any):</label>
+                <input type="text" id="examCode" placeholder="Enter exam code (optional)">
+            </div>
+            
+            <button onclick="startExam()">Start Exam</button>
+        </div>
+        
+        <!-- Exam Page -->
+        <div class="page" id="examPage">
+            <div class="user-details">
+                <h2>Python Certification Exam</h2>
+                <p>Candidate: <strong id="displayName"></strong></p>
+                <p>Mobile: <strong id="displayNumber"></strong></p>
+            </div>
+            
+            <div class="exam-info">
+                <div>Questions: <strong>15</strong></div>
+                <div class="timer">Time Left: <span id="time">30:00</span></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress"></div>
+            </div>
+            
+            <form id="quizForm">
+                <!-- Question 1 -->
+                <div class="question">
+                    <h3><span class="question-number">1</span> What is the correct extension for Python files?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q1" value="a" required> 
+                            a) .pyt
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="b"> 
+                            b) .py
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="c"> 
+                            c) .pt
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="d"> 
+                            d) .python
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Question 2 -->
+                <div class="question">
+                    <h3><span class="question-number">2</span> Which of these is NOT a Python data type?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q2" value="a" required> 
+                            a) list
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="b"> 
+                            b) tuple
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="c"> 
+                            c) array
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="d"> 
+                            d) dictionary
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Question 3 -->
+                <div class="question">
+                    <h3><span class="question-number">3</span> What is the output of print(2 ** 3)?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q3" value="a" required> 
+                            a) 6
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="b"> 
+                            b) 8
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="c"> 
+                            c) 9
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="d"> 
+                            d) 23
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Question 4 -->
+                <div class="question">
+                    <h3><span class="question-number">4</span> Which method adds an item to the end of a list?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q4" value="a" required> 
+                            a) list.insert()
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="b"> 
+                            b) list.append()
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="c"> 
+                            c) list.add()
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="d"> 
+                            d) list.push()
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Question 5 -->
+                <div class="question">
+                    <h3><span class="question-number">5</span> How do you start a for loop in Python?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q5" value="a" required> 
+                            a) for i in range(5):
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="b"> 
+                            b) for (i = 0; i < 5; i++)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="c"> 
+                            c) loop i from 1 to 5
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="d"> 
+                            d) foreach i in 5
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- More questions would be added here -->
+                
+                <button type="button" id="submitBtn" onclick="submitExam()">Submit Exam</button>
+            </form>
+        </div>
+        
+        <!-- Results Page -->
+        <div class="page" id="resultsPage">
+            <div class="user-details">
+                <h2>Exam Results</h2>
+                <p>Candidate: <strong id="resultName"></strong></p>
+                <p>Mobile: <strong id="resultNumber"></strong></p>
+                <p>Exam Date: <strong id="examDate"></strong></p>
+            </div>
+            
+            <div class="results">
+                <div class="score-card">
+                    <h3>Your Score</h3>
+                    <div class="score"><span id="score">0</span>/15</div>
+                    <p class="result-message" id="resultMessage"></p>
+                </div>
+                
+                <div class="admin-details">
+                    <h3>Exam Administrator Details</h3>
+                    <p>Exam conducted by: <strong>Python Certification Board</strong></p>
+                    <p>Contact: certification@python.org</p>
+                    <p>Phone: +1 (555) 123-4567</p>
+                </div>
+                
+                <button onclick="window.print()">Print Result</button>
+                <button onclick="resetExam()" style="background: var(--dark); margin-top: 15px;">Take Test Again</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 Python Certification Exam Portal | All rights reserved</p>
+        </div>
+    </div>
+
+    <script>
+        // Correct answers for all questions
+        const correctAnswers = {
+            q1: "b", 
+            q2: "c",
+            q3: "b",
+            q4: "b",
+            q5: "a",
+            // Add more answers for additional questions
+        };
+        
+        // User data and exam variables
+        let currentUser = {};
+        let timeLeft = 1800; // 30 minutes in seconds
+        let timerInterval;
+        let answeredCount = 0;
+        
+        // Start exam
+        function startExam() {
+            const name = document.getElementById('userName').value.trim();
+            const number = document.getElementById('userNumber').value.trim();
+            const examCode = document.getElementById('examCode').value.trim();
+            
+            // Basic validation
+            if (name.length < 3) {
+                alert("Please enter your full name (at least 3 characters)");
+                return;
+            }
+            
+            if (!/^\d{10}$/.test(number)) {
+                alert("Please enter a valid 10-digit mobile number");
+                return;
+            }
+            
+            // Store user data
+            currentUser = {
+                name: name,
+                number: number,
+                examCode: examCode,
+                startTime: new Date()
+            };
+            
+            // Show exam page
+            showPage('examPage');
+            document.getElementById('displayName').textContent = name;
+            document.getElementById('displayNumber').textContent = number;
+            
+            // Start timer
+            startTimer();
+            document.getElementById('quizForm').addEventListener('change', updateProgress);
+        }
+        
+        function startTimer() {
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitExam();
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('time').textContent = 
+                `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            
+            // Change color when time is running out
+            if (timeLeft < 300) { // 5 minutes left
+                document.querySelector('.timer').style.backgroundColor = 'var(--danger)';
+                document.querySelector('.timer').style.color = 'white';
+            }
+        }
+        
+        function updateProgress() {
+            answeredCount = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progress = (answeredCount / 5) * 100; // Change to 15 for full exam
+            document.getElementById('progress').style.width = `${progress}%`;
+        }
+        
+        function submitExam() {
+            clearInterval(timerInterval);
+            
+            // Calculate score
+            let score = 0;
+            for (let i = 1; i <= 5; i++) { // Change to 15 for full exam
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected && selected.value === correctAnswers[`q${i}`]) {
+                    score++;
+                }
+            }
+            
+            // Show results
+            showPage
