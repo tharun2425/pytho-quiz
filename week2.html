@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Python Basic - Week 2 Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px #ccc;
+    }
+    h2 {
+      text-align: center;
+      color: #6a11cb;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    textarea, input[type="text"], input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #6a11cb;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      display: block;
+      margin: 20px auto;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #2575fc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Python Basic - Week 2 Test</h2>
+    <!-- ✅ Netlify/GitHub Pages-compatible Form -->
+    <form name="week2test" method="POST" data-netlify="true">
+      <input type="hidden" name="form-name" value="week2test">
+      <label>Your Full Name:</label>
+      <input type="text" name="name" required>
+      <label>Your Email:</label>
+      <input type="email" name="email" required>
+
+      <!-- Sample 3 Questions (Add more as needed) -->
+      <div class="question">
+        <p>1. What is the output of: print(10 > 5)?</p>
+        <input type="radio" name="q1" value="True" required> True<br>
+        <input type="radio" name="q1" value="False"> False<br>
+      </div>
+
+      <div class="question">
+        <p>2. Which keyword is used for a loop in Python?</p>
+        <input type="radio" name="q2" value="for" required> for<br>
+        <input type="radio" name="q2" value="loop"> loop<br>
+      </div>
+
+      <div class="question">
+        <p>3. What is the output of len(\"Python\")?</p>
+        <input type="radio" name="q3" value="6" required> 6<br>
+        <input type="radio" name="q3" value="5"> 5<br>
+      </div>
+
+      <!-- 🟢 Add Questions 4 to 15 the same way -->
+
+      <!-- Programming Questions -->
+      <div class="question">
+        <p>Program 1: Write a Python program to check if a number is even or odd.</p>
+        <textarea name="prog1" placeholder="Write your Python code here..." required></textarea>
+      </div>
+
+      <div class="question">
+        <p>Program 2: Write a Python program to sum numbers from 1 to 10.</p>
+        <textarea name="prog2" placeholder="Write your Python code here..." required></textarea>
+      </div>
+
+      <button type="submit">Submit Test</button>
+    </form>
+  </div>
+</body>
+</html>
